@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /login
+Disallow: /register
+Disallow: /home
+Disallow: /api/
+
+Sitemap: http://localhost/laravel%20projects/fertility/public/sitemap.xml
