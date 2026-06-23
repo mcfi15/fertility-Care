@@ -6,7 +6,7 @@
                     <div class="single-list-item">
                         <div class="contact-info">
                             <div class="icon">
-                                <img src="{{ asset('uploads/image/clock.png') }}" alt="Icon">
+                                <img src="{{ asset('uploads/image/clock.png') }}"  alt="Icon">
                             </div>
                             <div class="content">
                                 <span class="info-title">Opening Hour</span>
@@ -44,7 +44,7 @@
                 <div class="header-left">
                     <div class="site-logo">
                         <a href="{{ url('/') }}">
-                            <img src="{{ asset($appSetting->logo) }}" alt="">
+                            <img src="{{ asset($appSetting->logo) }}" alt="" style="height: 90px;">
                         </a>
                     </div>
                 </div>
