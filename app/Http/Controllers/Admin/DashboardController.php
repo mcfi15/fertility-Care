@@ -2,26 +2,36 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Models\Job;
-use App\Models\Offer;
-use App\Models\Orders;
-use App\Models\Slider;
-use App\Models\Product;
-use App\Models\Category;
-use App\Models\Subscriber;
-use App\Models\Application;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Center;
+use App\Models\ContactMessage;
+use App\Models\Faq;
+use App\Models\Post;
+use App\Models\SiteSetting;
+use App\Models\Testimonial;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
-    public function index(){
-        $allapp = Application::count();
-        $alljobs = Job::count();
-        $alloffers = Offer::count();
-        $allcategories = Category::count();
-        $subscribers = Subscriber::count();
-        $allsliders = Slider::count();
-        return view('admin.dashboard', compact('allapp', 'alljobs', 'alloffers', 'allcategories', 'allsliders', 'subscribers'));
+    public function index()
+    {
+        $pages = config('site_pages', []);
+
+        $stats = [
+            'settings'     => SiteSetting::query()->count(),
+            'pages'        => count($pages),
+            'posts'        => Post::query()->count(),
+            'testimonials' => Testimonial::query()->count(),
+            'faqs'         => Faq::query()->count(),
+            'centers'      => Center::query()->count(),
+            'messages'     => ContactMessage::query()->count(),
+            'unread'       => ContactMessage::query()->unread()->count(),
+            'media'        => count(Storage::disk('public')->allFiles()),
+        ];
+
+        // Newest five messages, for the at-a-glance audit panel.
+        $recentMessages = ContactMessage::query()->newest()->take(5)->get();
+
+        return view('admin.dashboard', compact('stats', 'recentMessages'));
     }
 }

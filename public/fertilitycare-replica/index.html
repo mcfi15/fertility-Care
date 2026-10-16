@@ -1,0 +1,1233 @@
+<!doctype html>
+<!--
+  ============================================================================
+  FertilityCare Centers Latin America — high-fidelity landing page replica
+  (ENGLISH version; original site is in Spanish)
+  ----------------------------------------------------------------------------
+  Stack : HTML5 + Tailwind CSS (Play CDN, configured inline) + vanilla JS
+  Fonts : Montserrat (headings) + Source Sans 3 (body) — Google Fonts
+  Icons : Material Symbols Outlined (ligature icons, matches original site)
+  Assets: all media live in ./assets (see README.md for the full asset guide)
+  ----------------------------------------------------------------------------
+  Sections: Header · Hero · Pathways · Quote · Approach · Doctors ·
+            Directory + Testimonial · Resources · Community · FAQ ·
+            Final CTA · Footer (with contact form)
+  NOTE: URL paths (e.g. /directory, /faq) are kept identical to the
+  original site's routes so links map 1:1. Rename them if you also localize
+  the routes. Tailwind Play CDN is used for portability — see README.md.
+  ============================================================================
+-->
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FertilityCare™ Centers Latin America | Creighton Model & NaProTECHNOLOGY</title>
+  <meta name="description" content="We teach women and couples to read the signs of their cycle with the Creighton Model, and we support their reproductive health alongside a network of professionals in restorative medicine across Latin America." />
+  <meta name="theme-color" content="#005b7b" />
+
+  <!-- Icons -->
+  <link rel="icon" href="/fertilitycare-replica/assets/icon.png" />
+  <link rel="apple-touch-icon" href="/fertilitycare-replica/assets/apple-icon.png" />
+
+  <!-- Fonts: Montserrat (display) + Source Sans 3 (body) + Material Symbols (icons) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind Play CDN + design tokens extracted from the original site -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            sans: ['"Source Sans 3"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            ink:        '#10151c', // dark surfaces / footer
+            inksoft:    '#1b212b',
+            midnight:   '#001e2c', // deep teal-black
+            primary:    { DEFAULT: '#005b7b', dark: '#004c68', deep: '#00201c' },
+            teal:       '#1e7499',
+            mint:       '#b0efe2', // tertiary container
+            mintdeept:  '#075047',
+            sky:        '#86cff8',
+            skysoft:    '#c3e8ff', // primary container
+            surface:    '#f9f9ff',
+            surface2:   '#f0f3ff',
+            gold:       '#fae283',
+            danger:     '#93000a',
+            dangerbg:   '#ffdad6',
+          },
+          boxShadow: {
+            soft: '0 10px 30px -12px rgba(0,30,44,.18)',
+            card: '0 18px 48px -20px rgba(0,30,44,.28)',
+          },
+          borderRadius: { '4xl': '2rem' },
+        },
+      },
+    };
+  </script>
+
+  <!-- Custom CSS: icons, accordion, mega-menu, reveal animations, helpers -->
+  <style>
+    :root { --header-h: 76px; }
+
+    /* Material Symbols defaults (mirrors the original ligature-icon setup) */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1; user-select: none;
+    }
+    .icon-fill { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+
+    /* Anchor offset so smooth-scroll targets clear the sticky header */
+    section[id], div[id] { scroll-margin-top: calc(var(--header-h) + 16px); }
+
+    /* Mega-menu: reveal on hover (desktop) and focus (keyboard) */
+    .mega-panel { opacity: 0; visibility: hidden; transform: translateY(8px);
+      transition: opacity .18s ease, transform .18s ease, visibility .18s; }
+    @media (min-width: 1024px) {
+      .nav-item:hover > .mega-panel,
+      .nav-item:focus-within > .mega-panel { opacity: 1; visibility: visible; transform: translateY(0); }
+      .nav-item:hover > .nav-trigger .chev { transform: rotate(180deg); }
+    }
+    .nav-trigger .chev { transition: transform .18s ease; }
+
+    /* FAQ accordion */
+    .faq-answer { overflow: hidden; max-height: 0; transition: max-height .35s ease; }
+    .faq-item.open .faq-answer { max-height: 640px; }
+    .faq-item.open .faq-plus { transform: rotate(45deg); }
+    .faq-plus { transition: transform .25s ease; }
+
+    /* Mobile drawer */
+    .m-nav-panel { overflow: hidden; max-height: 0; transition: max-height .3s ease; }
+    .m-nav-group.open .m-nav-panel { max-height: 900px; }
+    .m-nav-group.open .m-chev { transform: rotate(180deg); }
+    .m-chev { transition: transform .25s ease; }
+
+    /* Scroll reveal (progressively enhanced; no-JS fallback shows everything) */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .6s ease, transform .6s ease; }
+    .reveal.in { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+      html { scroll-behavior: auto; }
+    }
+
+    /* Decorative dotted / grid backdrop used behind hero + dark bands */
+    .bg-dots { background-image: radial-gradient(rgba(255,255,255,.14) 1px, transparent 1px);
+      background-size: 22px 22px; }
+    .bg-grid { background-image: linear-gradient(rgba(0,91,123,.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,91,123,.06) 1px, transparent 1px);
+      background-size: 40px 40px; }
+
+    /* Focus ring consistency */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid #86cff8; outline-offset: 2px; border-radius: 6px;
+    }
+  </style>
+
+  <!-- Organization structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "FertilityCare Centers Latin America",
+    "url": "https://fertilitycare.lat/",
+    "description": "We teach women and couples to read the signs of their cycle with the Creighton Model and we support their reproductive health across Latin America.",
+    "sameAs": [
+      "https://www.instagram.com/fertilitycarelatinoamerica/",
+      "https://www.facebook.com/FertilityCareLatinoamerica",
+      "https://www.youtube.com/@fertilitycarelatinoamerica"
+    ]
+  }
+  </script>
+</head>
+
+<body class="bg-surface font-sans text-ink antialiased selection:bg-mint selection:text-primary-deep">
+
+  <!-- =====================================================================
+       HEADER — sticky, translucent, mega-menu navigation
+       ===================================================================== -->
+  <header id="site-header" class="sticky top-0 z-50 border-b border-slate-200/70 bg-white/85 backdrop-blur-md transition-shadow">
+    <div class="mx-auto flex h-[76px] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+
+      <!-- Logo -->
+      <a href="#home" class="flex shrink-0 items-center gap-2" aria-label="FertilityCare Centers Latin America — home">
+        <img src="/fertilitycare-replica/assets/logo.svg" alt="FertilityCare Centers Latin America" class="h-11 w-auto" />
+      </a>
+
+      <!-- Desktop navigation (mega-menus) -->
+      <nav class="hidden lg:block" aria-label="Main navigation">
+        <ul class="flex items-center gap-0.5 text-sm font-medium text-slate-700">
+
+          <!-- Group 1: What is FertilityCare? -->
+          <li class="nav-item relative">
+            <button class="nav-trigger flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition hover:bg-surface2 hover:text-primary">
+              What is FertilityCare? <span class="material-symbols-outlined chev text-[20px]">expand_more</span>
+            </button>
+            <div class="mega-panel absolute left-1/2 top-full w-[560px] -translate-x-1/2 pt-3">
+              <div class="rounded-3xl border border-slate-100 bg-white p-4 shadow-card">
+                <div class="grid grid-cols-2 gap-1">
+                  <a href="/what-is-fertilitycare" class="group rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">What is FertilityCare</p>
+                    <p class="mt-0.5 text-sm text-slate-500">The gateway to the system and its approach</p>
+                  </a>
+                  <a href="/faq" class="group rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Frequently asked questions</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Get your questions answered before you start</p>
+                  </a>
+                  <a href="/testimonials" class="group rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Testimonials</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Stories from those already living it</p>
+                  </a>
+                  <a href="/about-us" class="group rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">About us</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Who we are, the Latin American network, and the philosophy that guides us.</p>
+                  </a>
+                </div>
+                <a href="/the-system" class="mt-3 flex items-center justify-between rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
+                  Explore the full system <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Group 2: Creighton Model -->
+          <li class="nav-item relative">
+            <button class="nav-trigger flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition hover:bg-surface2 hover:text-primary">
+              Creighton Model <span class="material-symbols-outlined chev text-[20px]">expand_more</span>
+            </button>
+            <div class="mega-panel absolute left-1/2 top-full w-[420px] -translate-x-1/2 pt-3">
+              <div class="rounded-3xl border border-slate-100 bg-white p-4 shadow-card">
+                <div class="grid gap-1">
+                  <a href="/creighton-model" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Creighton Model</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Learn to observe and chart your cycle</p>
+                  </a>
+                  <a href="/what-is-a-practitioner" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">What is a Practitioner</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Who teaches and supports you</p>
+                  </a>
+                </div>
+                <a href="/directory" class="mt-3 flex items-center justify-between rounded-2xl bg-mint px-4 py-3 text-sm font-semibold text-mintdeept transition hover:bg-[#9fe6d8]">
+                  Find a Practitioner <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Group 3: NaProTECHNOLOGY -->
+          <li class="nav-item relative">
+            <button class="nav-trigger flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition hover:bg-surface2 hover:text-primary">
+              NaProTECHNOLOGY <span class="material-symbols-outlined chev text-[20px]">expand_more</span>
+            </button>
+            <div class="mega-panel absolute left-1/2 top-full w-[400px] -translate-x-1/2 pt-3">
+              <div class="rounded-3xl border border-slate-100 bg-white p-4 shadow-card">
+                <a href="/naprotechnology" class="block rounded-2xl p-3 transition hover:bg-surface2">
+                  <p class="font-display font-semibold text-primary">NaProTECHNOLOGY</p>
+                  <p class="mt-0.5 text-sm text-slate-500">Medicine that seeks causes, not shortcuts</p>
+                </a>
+                <a href="/directory/napro-doctors" class="mt-3 flex items-center justify-between rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
+                  Find a NaPro doctor <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Group 4: Our Directory -->
+          <li class="nav-item relative">
+            <button class="nav-trigger flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition hover:bg-surface2 hover:text-primary">
+              Our Directory <span class="material-symbols-outlined chev text-[20px]">expand_more</span>
+            </button>
+            <div class="mega-panel absolute left-1/2 top-full w-[440px] -translate-x-1/2 pt-3">
+              <div class="rounded-3xl border border-slate-100 bg-white p-4 shadow-card">
+                <div class="grid gap-1">
+                  <a href="/directory" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Centers Directory</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Centers and Practitioners by country</p>
+                  </a>
+                  <a href="/directory/napro-doctors" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">NaPro consultant doctors</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Specialists in restorative medicine</p>
+                  </a>
+                </div>
+                <a href="/find-support" class="mt-3 flex items-center justify-between rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
+                  See all support options <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </li>
+
+          <!-- Group 5: Professional Training -->
+          <li class="nav-item relative">
+            <button class="nav-trigger flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 transition hover:bg-surface2 hover:text-primary">
+              Professional Training <span class="material-symbols-outlined chev text-[20px]">expand_more</span>
+            </button>
+            <div class="mega-panel absolute right-0 top-full w-[620px] pt-3">
+              <div class="rounded-3xl border border-slate-100 bg-white p-4 shadow-card">
+                <div class="grid grid-cols-2 gap-1">
+                  <a href="/professional-training#ser-practitioner" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Become a Practitioner</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Learn about the training and its purpose</p>
+                  </a>
+                  <a href="/professional-training#etapas" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Training stages</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Educational phases, supervised practice, and evaluation</p>
+                  </a>
+                  <a href="/professional-training#requisitos" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Who can apply</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Applicant profile and admission requirements</p>
+                  </a>
+                  <a href="/professional-training#programas-educativos" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Educational programs</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Bogotá and Mexico City: dates and brochures</p>
+                  </a>
+                  <a href="/professional-training#generaciones" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Past cohorts</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Photos from previous programs</p>
+                  </a>
+                  <a href="/professional-training#formacion-medica" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Training for consultant doctors</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Discover the Medical Consultant track</p>
+                  </a>
+                  <a href="/professional-training#preguntas-formacion" class="rounded-2xl p-3 transition hover:bg-surface2">
+                    <p class="font-display font-semibold text-primary">Frequently asked questions</p>
+                    <p class="mt-0.5 text-sm text-slate-500">Get your questions answered before you start</p>
+                  </a>
+                </div>
+                <a href="/professional-training" class="mt-3 flex items-center justify-between rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
+                  See all professional training <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </nav>
+
+      <!-- Right side actions -->
+      <div class="flex items-center gap-2">
+        <a href="/login" class="hidden items-center gap-1.5 whitespace-nowrap rounded-full border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:border-primary hover:text-primary sm:inline-flex">
+          <span class="material-symbols-outlined text-[20px]">lock_open</span> Backoffice
+        </a>
+        <a href="/directory" class="hidden whitespace-nowrap rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition hover:bg-primary-dark xl:inline-flex">
+          Find support
+        </a>
+        <!-- Mobile menu toggle -->
+        <button id="menu-toggle" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 text-slate-700 transition hover:bg-surface2 lg:hidden" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile drawer -->
+    <div id="mobile-menu" class="hidden border-t border-slate-100 bg-white lg:hidden">
+      <nav class="max-h-[calc(100vh-76px)] overflow-y-auto px-4 py-4" aria-label="Mobile navigation">
+
+        <!-- group template -->
+        <div class="m-nav-group border-b border-slate-100">
+          <button class="flex w-full items-center justify-between py-4 text-left font-display font-semibold text-ink">
+            What is FertilityCare? <span class="material-symbols-outlined m-chev">expand_more</span>
+          </button>
+          <div class="m-nav-panel">
+            <div class="space-y-1 pb-4 text-sm">
+              <a href="/what-is-fertilitycare" class="block rounded-xl px-3 py-2 hover:bg-surface2">What is FertilityCare</a>
+              <a href="/faq" class="block rounded-xl px-3 py-2 hover:bg-surface2">Frequently asked questions</a>
+              <a href="/testimonials" class="block rounded-xl px-3 py-2 hover:bg-surface2">Testimonials</a>
+              <a href="/about-us" class="block rounded-xl px-3 py-2 hover:bg-surface2">About us</a>
+              <a href="/the-system" class="block rounded-xl px-3 py-2 font-semibold text-primary hover:bg-surface2">Explore the full system</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-nav-group border-b border-slate-100">
+          <button class="flex w-full items-center justify-between py-4 text-left font-display font-semibold text-ink">
+            Creighton Model <span class="material-symbols-outlined m-chev">expand_more</span>
+          </button>
+          <div class="m-nav-panel">
+            <div class="space-y-1 pb-4 text-sm">
+              <a href="/creighton-model" class="block rounded-xl px-3 py-2 hover:bg-surface2">Creighton Model</a>
+              <a href="/what-is-a-practitioner" class="block rounded-xl px-3 py-2 hover:bg-surface2">What is a Practitioner</a>
+              <a href="/directory" class="block rounded-xl px-3 py-2 font-semibold text-primary hover:bg-surface2">Find a Practitioner</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-nav-group border-b border-slate-100">
+          <button class="flex w-full items-center justify-between py-4 text-left font-display font-semibold text-ink">
+            NaProTECHNOLOGY <span class="material-symbols-outlined m-chev">expand_more</span>
+          </button>
+          <div class="m-nav-panel">
+            <div class="space-y-1 pb-4 text-sm">
+              <a href="/naprotechnology" class="block rounded-xl px-3 py-2 hover:bg-surface2">NaProTECHNOLOGY</a>
+              <a href="/directory/napro-doctors" class="block rounded-xl px-3 py-2 font-semibold text-primary hover:bg-surface2">Find a NaPro doctor</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-nav-group border-b border-slate-100">
+          <button class="flex w-full items-center justify-between py-4 text-left font-display font-semibold text-ink">
+            Our Directory <span class="material-symbols-outlined m-chev">expand_more</span>
+          </button>
+          <div class="m-nav-panel">
+            <div class="space-y-1 pb-4 text-sm">
+              <a href="/directory" class="block rounded-xl px-3 py-2 hover:bg-surface2">Centers Directory</a>
+              <a href="/directory/napro-doctors" class="block rounded-xl px-3 py-2 hover:bg-surface2">NaPro consultant doctors</a>
+              <a href="/find-support" class="block rounded-xl px-3 py-2 font-semibold text-primary hover:bg-surface2">See all support options</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="m-nav-group border-b border-slate-100">
+          <button class="flex w-full items-center justify-between py-4 text-left font-display font-semibold text-ink">
+            Professional Training <span class="material-symbols-outlined m-chev">expand_more</span>
+          </button>
+          <div class="m-nav-panel">
+            <div class="space-y-1 pb-4 text-sm">
+              <a href="/professional-training#ser-practitioner" class="block rounded-xl px-3 py-2 hover:bg-surface2">Become a Practitioner</a>
+              <a href="/professional-training#etapas" class="block rounded-xl px-3 py-2 hover:bg-surface2">Training stages</a>
+              <a href="/professional-training#requisitos" class="block rounded-xl px-3 py-2 hover:bg-surface2">Who can apply</a>
+              <a href="/professional-training#programas-educativos" class="block rounded-xl px-3 py-2 hover:bg-surface2">Educational programs</a>
+              <a href="/professional-training#generaciones" class="block rounded-xl px-3 py-2 hover:bg-surface2">Past cohorts</a>
+              <a href="/professional-training#formacion-medica" class="block rounded-xl px-3 py-2 hover:bg-surface2">Training for consultant doctors</a>
+              <a href="/professional-training#preguntas-formacion" class="block rounded-xl px-3 py-2 hover:bg-surface2">Frequently asked questions</a>
+              <a href="/professional-training" class="block rounded-xl px-3 py-2 font-semibold text-primary hover:bg-surface2">See all professional training</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-2 pt-4">
+          <a href="/login" class="inline-flex items-center gap-2 rounded-full border border-slate-200 px-5 py-3 text-sm font-semibold text-slate-700">
+            <span class="material-symbols-outlined text-[20px]">lock_open</span> Backoffice
+          </a>
+          <a href="/directory" class="rounded-full bg-primary px-5 py-3 text-center text-sm font-semibold text-white">Find support</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="home">
+
+    <!-- =====================================================================
+         1) HERO — headline, sub-copy, dual CTA, evidence badge + media
+         ===================================================================== -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-skysoft/50 via-surface to-surface">
+      <div class="bg-dots pointer-events-none absolute inset-0 opacity-[0.35] [mask-image:radial-gradient(70%_60%_at_50%_0%,#000_10%,transparent_75%)]"></div>
+      <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-14 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
+
+        <!-- Copy -->
+        <div class="reveal">
+          <!-- Trust / evidence badge -->
+          <div class="mb-6 flex flex-wrap items-center gap-3">
+            <span class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-primary shadow-soft ring-1 ring-primary/10">
+              <span class="material-symbols-outlined icon-fill text-[18px] text-teal">verified_user</span>
+              Evidence-based
+            </span>
+            <span class="inline-flex items-center gap-2 rounded-full bg-mint/60 px-3.5 py-1.5 text-sm font-semibold text-mintdeept">
+              <span class="material-symbols-outlined text-[18px]">science</span>
+              Reproductive science
+            </span>
+          </div>
+
+          <h1 class="font-display text-4xl font-extrabold leading-[1.1] tracking-tight text-ink sm:text-5xl lg:text-6xl">
+            Your cycles speak. <span class="text-primary">Learn to listen to them.</span>
+          </h1>
+
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+            At FertilityCare™ Centers Latin America we teach women and couples to read the signs of their cycle with the
+            Creighton Model — also known as the Creighton method — and we support their reproductive health alongside a
+            network of professionals in restorative medicine.
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a href="/directory" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-7 py-4 text-base font-semibold text-white shadow-card transition hover:-translate-y-0.5 hover:bg-primary-dark">
+              Find support <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </a>
+            <a href="/testimonials" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary/15 bg-white px-7 py-4 text-base font-semibold text-primary transition hover:border-primary/40 hover:bg-surface2">
+              <span class="material-symbols-outlined text-[20px]">favorite</span> See testimonials
+            </a>
+          </div>
+        </div>
+
+        <!-- Media: hero video (poster fallback) -->
+        <div class="reveal relative">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-4xl shadow-card ring-1 ring-black/5 lg:aspect-[5/4]">
+            <video class="h-full w-full object-cover" autoplay muted loop playsinline preload="auto"
+                   poster="/fertilitycare-replica/assets/hero-doctor.webp"
+                   aria-label="Doctor smiling in a bright clinic, reviewing a cycle chart on a tablet.">
+              <source src="/fertilitycare-replica/assets/hero-doctor.mp4" type="video/mp4" />
+            </video>
+            <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-midnight/25 via-transparent to-transparent"></div>
+          </div>
+
+          <!-- Floating stat card -->
+          <div class="absolute -bottom-5 left-4 flex items-center gap-3 rounded-2xl bg-white/95 px-4 py-3 shadow-card backdrop-blur sm:left-6">
+            <span class="grid h-11 w-11 place-items-center rounded-full bg-mint/70 text-mintdeept">
+              <span class="material-symbols-outlined">public</span>
+            </span>
+            <div class="leading-tight">
+              <p class="font-display text-lg font-bold text-ink">10 countries</p>
+              <p class="text-xs text-slate-500">Presence across Latin America</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         2) PATHWAYS — "What brings you here?" five entry cards
+         ===================================================================== -->
+    <section id="start" class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">What brings you here?</h2>
+        <p class="mt-4 text-lg text-slate-600">
+          Choose where to start. Every path leads to the same care: science that listens and close, personal support.
+        </p>
+      </div>
+
+      <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Card 1 — Creighton Method -->
+        <a href="/creighton-model" class="reveal group flex flex-col rounded-3xl border border-slate-100 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/20 hover:shadow-card">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-skysoft text-primary-dark transition group-hover:bg-primary group-hover:text-white">
+            <span class="material-symbols-outlined text-[28px]">monitoring</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">Creighton Method</h3>
+          <p class="mt-2 flex-1 text-slate-600">
+            Learn to observe and track the signs of your cycle with the Creighton Model and personalized support.
+          </p>
+          <span class="mt-6 inline-flex items-center gap-1.5 font-semibold text-primary">
+            Explore <span class="material-symbols-outlined text-[20px] transition group-hover:translate-x-1">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Card 2 — NaProTECHNOLOGY -->
+        <a href="/naprotechnology" class="reveal group flex flex-col rounded-3xl border border-slate-100 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/20 hover:shadow-card">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-mint/60 text-mintdeept transition group-hover:bg-mintdeept group-hover:text-white">
+            <span class="material-symbols-outlined text-[28px]">biotech</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">NaProTECHNOLOGY®</h3>
+          <p class="mt-2 flex-1 text-slate-600">
+            Discover the medical science that works with your cycle and seeks the causes of reproductive and gynecological conditions.
+          </p>
+          <span class="mt-6 inline-flex items-center gap-1.5 font-semibold text-primary">
+            Explore <span class="material-symbols-outlined text-[20px] transition group-hover:translate-x-1">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Card 3 — Find support (featured, dark) -->
+        <a href="/find-support" class="reveal group flex flex-col rounded-3xl bg-midnight p-7 text-white shadow-card transition hover:-translate-y-1">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white/10 text-sky transition group-hover:bg-sky group-hover:text-midnight">
+            <span class="material-symbols-outlined text-[28px]">location_on</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold">Find support</h3>
+          <p class="mt-2 text-slate-200">
+            A directory of Centers and NaPro consultant doctors across Latin America, plus testimonials from those who
+            have already taken the next step.
+          </p>
+          <p class="mt-3 text-sm text-sky/90">
+            In addition to our presence in North America and other continents, here we focus on Latin America, currently
+            in 10 countries. Browse our directory.
+          </p>
+          <span class="mt-6 inline-flex items-center gap-1.5 font-semibold text-sky">
+            Explore <span class="material-symbols-outlined text-[20px] transition group-hover:translate-x-1">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Card 4 — Professional training -->
+        <a href="/professional-training" class="reveal group flex flex-col rounded-3xl border border-slate-100 bg-white p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/20 hover:shadow-card">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-gold/50 text-[#534600] transition group-hover:bg-[#534600] group-hover:text-gold">
+            <span class="material-symbols-outlined text-[28px]">school</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">Professional training</h3>
+          <p class="mt-2 flex-1 text-slate-600">
+            Train as a Practitioner or consultant doctor to teach the Creighton Model and support women and couples.
+          </p>
+          <span class="mt-6 inline-flex items-center gap-1.5 font-semibold text-primary">
+            Explore <span class="material-symbols-outlined text-[20px] transition group-hover:translate-x-1">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Card 5 — Continuing Education -->
+        <a href="/login" class="reveal group flex flex-col rounded-3xl border border-slate-100 bg-surface2 p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/20">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white text-primary shadow-soft transition group-hover:bg-primary group-hover:text-white">
+            <span class="material-symbols-outlined text-[28px]">lock_open</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">Continuing Education</h3>
+          <p class="mt-2 flex-1 text-slate-600">
+            The continuing education space for Practitioners and consultant doctors.
+          </p>
+          <span class="mt-6 inline-flex items-center gap-1.5 font-semibold text-primary">
+            Explore <span class="material-symbols-outlined text-[20px] transition group-hover:translate-x-1">arrow_forward</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         3) QUOTE — founder testimonial with supporting imagery
+         ===================================================================== -->
+    <section class="relative overflow-hidden bg-midnight text-white">
+      <div class="bg-dots pointer-events-none absolute inset-0 opacity-40"></div>
+      <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
+
+        <figure class="reveal">
+          <span class="material-symbols-outlined icon-fill text-6xl text-sky/70">format_quote</span>
+          <blockquote class="mt-4 font-display text-2xl font-semibold leading-snug text-white sm:text-3xl">
+            Fertility is a gift that deserves to be known, cared for, and supported with science, respect, and love.
+          </blockquote>
+          <figcaption class="mt-6 flex items-center gap-3">
+            <span class="h-px w-10 bg-sky/60"></span>
+            <div>
+              <p class="font-semibold text-white">K. Diane Daly, RN, CFCE</p>
+              <p class="text-sm text-sky/90">Co-founder of the Creighton Model of the FertilityCare System</p>
+            </div>
+          </figcaption>
+        </figure>
+
+        <div class="reveal grid grid-cols-2 gap-4">
+          <img src="/fertilitycare-replica/assets/pareja-creighton.webp"
+               alt="A couple charting their cycle with the Creighton Model materials at their kitchen table."
+               class="col-span-1 h-64 w-full rounded-3xl object-cover shadow-card sm:h-80" loading="lazy" />
+          <img src="/fertilitycare-replica/assets/medical-consultant.webp"
+               alt="A medical consultation with a specialist certified in NaProTECHNOLOGY, in a warm and professional setting."
+               class="col-span-1 mt-8 h-64 w-full rounded-3xl object-cover shadow-card sm:h-80" loading="lazy" />
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         4) APPROACH — "Where others see a cycle..."
+         ===================================================================== -->
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+        <div class="reveal">
+          <p class="font-display text-sm font-bold uppercase tracking-widest text-teal">Our approach</p>
+          <h2 class="mt-3 font-display text-3xl font-bold leading-tight tracking-tight text-ink sm:text-4xl">
+            Where others see a cycle, we see a language of health
+          </h2>
+          <p class="mt-5 text-lg leading-relaxed text-slate-600">
+            At FertilityCare™ we look for causes instead of silencing symptoms. We see your reproductive health as part
+            of your overall well-being, not as an isolated problem to be switched off.
+          </p>
+
+          <ul class="mt-8 space-y-5">
+            <li class="flex gap-4">
+              <span class="material-symbols-outlined icon-fill mt-0.5 text-[26px] text-primary">check_circle</span>
+              <div>
+                <h3 class="font-display text-lg font-bold text-ink">Diagnosing causes</h3>
+                <p class="mt-1 text-slate-600">Before proposing a treatment, we seek to understand what is really happening in your cycle.</p>
+              </div>
+            </li>
+            <li class="flex gap-4">
+              <span class="material-symbols-outlined icon-fill mt-0.5 text-[26px] text-primary">check_circle</span>
+              <div>
+                <h3 class="font-display text-lg font-bold text-ink">Dignity of the person</h3>
+                <p class="mt-1 text-slate-600">An approach that respects the woman, the couple, and every story, without judging the path already traveled.</p>
+              </div>
+            </li>
+          </ul>
+
+          <a href="/about-us" class="mt-8 inline-flex items-center gap-2 rounded-full border-2 border-primary/15 bg-white px-6 py-3.5 font-semibold text-primary transition hover:border-primary/40 hover:bg-surface2">
+            Get to know who we are <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </a>
+        </div>
+
+        <!-- Media: secondary video -->
+        <div class="reveal relative">
+          <div class="relative aspect-[4/3] overflow-hidden rounded-4xl shadow-card ring-1 ring-black/5">
+            <video class="h-full w-full object-cover" autoplay muted loop playsinline preload="none"
+                   poster="/fertilitycare-replica/assets/doctor-chart-poster.webp"
+                   aria-label="Medical consultation: a doctor and patient review a scan next to the ultrasound equipment.">
+              <source src="/fertilitycare-replica/assets/doctor-chart-hero.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         5) DOCTORS — "Our doctors"
+         ===================================================================== -->
+    <section class="bg-surface2">
+      <div class="mx-auto grid max-w-7xl items-center gap-12 px-4 py-16 sm:px-6 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-24">
+        <div class="reveal order-2 lg:order-1">
+          <img src="/fertilitycare-replica/assets/equipo-medicos-napro.webp"
+               alt="A group of consultant doctors certified in NaProTECHNOLOGY, in a clinical hallway."
+               class="aspect-[5/4] w-full rounded-4xl object-cover shadow-card" loading="lazy" />
+        </div>
+        <div class="reveal order-1 lg:order-2">
+          <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Our doctors</h2>
+          <p class="mt-5 text-lg leading-relaxed text-slate-600">
+            A network of consultant doctors certified in NaProTECHNOLOGY®, present in different Latin American countries,
+            supporting each case with an approach that seeks the causes before proposing a treatment.
+          </p>
+          <a href="/directory/napro-doctors" class="mt-8 inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-primary-dark">
+            Meet the doctors in your country <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         6) DIRECTORY + TESTIMONIAL
+         ===================================================================== -->
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="grid gap-12 lg:grid-cols-2 lg:gap-16">
+        <!-- Directory CTA -->
+        <div class="reveal">
+          <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Find a Center near you</h2>
+          <p class="mt-5 text-lg leading-relaxed text-slate-600">
+            Explore our directory of Centers and Practitioners across Latin America. If we're not in your city yet,
+            write to us: the network keeps growing.
+          </p>
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a href="/directory" class="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3.5 font-semibold text-white shadow-soft transition hover:-translate-y-0.5 hover:bg-primary-dark">
+              View directory <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </a>
+            <a href="/contact" class="inline-flex items-center justify-center gap-2 rounded-full border-2 border-primary/15 bg-white px-6 py-3.5 font-semibold text-primary transition hover:border-primary/40 hover:bg-surface2">
+              Write to us
+            </a>
+          </div>
+        </div>
+
+        <!-- Testimonial card -->
+        <figure class="reveal relative rounded-4xl border border-slate-100 bg-white p-8 shadow-card">
+          <span class="material-symbols-outlined icon-fill absolute -top-4 left-8 text-5xl text-skysoft">format_quote</span>
+          <span class="inline-flex items-center gap-1.5 rounded-full bg-mint/60 px-3 py-1 text-xs font-bold uppercase tracking-wide text-mintdeept">
+            Diagnosis
+          </span>
+          <blockquote class="mt-5 text-xl leading-relaxed text-slate-700">
+            After years without answers, my Practitioner helped me understand what was happening in my cycle. For the
+            first time I felt that someone was looking for the cause, not just covering up the symptom.
+          </blockquote>
+          <figcaption class="mt-6 flex items-center gap-3">
+            <span class="grid h-11 w-11 place-items-center rounded-full bg-primary/10 font-display font-bold text-primary">A</span>
+            <div>
+              <p class="font-semibold text-ink">Alejandra, 32 years old</p>
+              <p class="flex items-center gap-0.5 text-gold" aria-label="5 out of 5 stars">
+                <span class="material-symbols-outlined icon-fill text-[18px]">star</span>
+                <span class="material-symbols-outlined icon-fill text-[18px]">star</span>
+                <span class="material-symbols-outlined icon-fill text-[18px]">star</span>
+                <span class="material-symbols-outlined icon-fill text-[18px]">star</span>
+                <span class="material-symbols-outlined icon-fill text-[18px]">star</span>
+              </p>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         7) RESOURCES — blog / news
+         ===================================================================== -->
+    <section class="bg-surface2">
+      <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <div class="reveal flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+          <div class="max-w-2xl">
+            <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Resources and news</h2>
+            <p class="mt-4 text-lg text-slate-600">
+              Articles on the cycle, fertility, and reproductive health, in clear language and backed by professionals.
+            </p>
+          </div>
+          <div class="flex flex-wrap gap-3">
+            <a href="/resources" class="inline-flex items-center gap-2 rounded-full border-2 border-primary/15 bg-white px-5 py-3 text-sm font-semibold text-primary transition hover:border-primary/40">
+              Library and official sources
+            </a>
+            <a href="/blog" class="inline-flex items-center gap-2 rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
+              See all articles
+            </a>
+          </div>
+        </div>
+
+        <div class="mt-12 grid gap-6 md:grid-cols-3">
+          <!-- Article 1 -->
+          <article class="reveal group flex flex-col overflow-hidden rounded-3xl bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+            <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-primary to-midnight">
+              <img src="/fertilitycare-replica/assets/blog-napro.webp" alt="" class="h-full w-full object-cover opacity-90 transition group-hover:scale-105" loading="lazy" />
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <span class="text-xs font-bold uppercase tracking-wide text-teal">Clinical</span>
+              <h3 class="mt-2 font-display text-lg font-bold leading-snug text-ink">Why a gynecologist studies NaProTECHNOLOGY</h3>
+              <p class="mt-2 flex-1 text-sm text-slate-600">
+                Dr. Fernando Urquiza, a gynecologist and NaProTECHNOLOGY professional, explains his reasons for studying
+                this emerging science.
+              </p>
+              <div class="mt-5 flex items-center justify-between text-sm">
+                <time class="text-slate-500" datetime="2026-09-07">Sep 7, 2026</time>
+                <a href="/blog/why-study-naprotechnology" class="inline-flex items-center gap-1 font-semibold text-primary">
+                  Read more <span class="material-symbols-outlined text-[18px] transition group-hover:translate-x-1">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 2 -->
+          <article class="reveal group flex flex-col overflow-hidden rounded-3xl bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+            <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-teal to-mintdeept">
+              <img src="/fertilitycare-replica/assets/blog-derechos.webp" alt="" class="h-full w-full object-cover opacity-90 transition group-hover:scale-105" loading="lazy" />
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <span class="text-xs font-bold uppercase tracking-wide text-teal">Education</span>
+              <h3 class="mt-2 font-display text-lg font-bold leading-snug text-ink">What every woman and every couple have the right to know</h3>
+              <p class="mt-2 flex-1 text-sm text-slate-600">
+                A video about the essential information every woman and every couple have the right to know about their fertility.
+              </p>
+              <div class="mt-5 flex items-center justify-between text-sm">
+                <time class="text-slate-500" datetime="2026-05-17">May 17, 2026</time>
+                <a href="/blog/what-every-woman-and-couple-have-the-right-to-know" class="inline-flex items-center gap-1 font-semibold text-primary">
+                  Read more <span class="material-symbols-outlined text-[18px] transition group-hover:translate-x-1">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <!-- Article 3 -->
+          <article class="reveal group flex flex-col overflow-hidden rounded-3xl bg-white shadow-soft transition hover:-translate-y-1 hover:shadow-card">
+            <div class="relative aspect-[16/10] overflow-hidden bg-gradient-to-br from-sky to-primary">
+              <img src="/fertilitycare-replica/assets/blog-metodos-naturales.webp" alt="" class="h-full w-full object-cover opacity-90 transition group-hover:scale-105" loading="lazy" />
+            </div>
+            <div class="flex flex-1 flex-col p-6">
+              <span class="text-xs font-bold uppercase tracking-wide text-teal">Education</span>
+              <h3 class="mt-2 font-display text-lg font-bold leading-snug text-ink">Natural fertility methods</h3>
+              <p class="mt-2 flex-1 text-sm text-slate-600">
+                Eva Corujo talks about natural fertility models, how to live them, and how to put them into practice.
+              </p>
+              <div class="mt-5 flex items-center justify-between text-sm">
+                <time class="text-slate-500" datetime="2025-11-14">Nov 14, 2025</time>
+                <a href="/blog/natural-fertility-methods" class="inline-flex items-center gap-1 font-semibold text-primary">
+                  Read more <span class="material-symbols-outlined text-[18px] transition group-hover:translate-x-1">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         8) COMMUNITY — social channels
+         ===================================================================== -->
+    <section class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+      <div class="reveal mx-auto max-w-2xl text-center">
+        <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Dive into our community</h2>
+        <p class="mt-4 text-lg text-slate-600">Content, stories, and news on our social channels.</p>
+      </div>
+
+      <div class="mt-12 grid gap-6 md:grid-cols-3">
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/fertilitycarelatinoamerica/" target="_blank" rel="noopener" class="reveal group rounded-3xl border border-slate-100 bg-gradient-to-br from-[#f58529]/10 via-[#dd2a7b]/10 to-[#8134af]/10 p-7 transition hover:-translate-y-1 hover:shadow-card">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#dd2a7b] shadow-soft">
+            <span class="material-symbols-outlined text-[28px]">photo_camera</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">Instagram</h3>
+          <p class="mt-2 text-slate-600">Stories, cycle tips, and behind the scenes of the network.</p>
+          <span class="mt-6 inline-flex items-center gap-2 font-semibold text-primary group-hover:gap-3">
+            Follow <span class="material-symbols-outlined text-[20px] transition">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/FertilityCareLatinoamerica" target="_blank" rel="noopener" class="reveal group rounded-3xl border border-slate-100 bg-gradient-to-br from-[#1877f2]/10 to-surface p-7 transition hover:-translate-y-1 hover:shadow-card">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#1877f2] shadow-soft">
+            <span class="material-symbols-outlined text-[28px]">thumb_up</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">Facebook</h3>
+          <p class="mt-2 text-slate-600">Community, events, and articles to support you.</p>
+          <span class="mt-6 inline-flex items-center gap-2 font-semibold text-primary group-hover:gap-3">
+            Follow <span class="material-symbols-outlined text-[20px] transition">arrow_forward</span>
+          </span>
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@fertilitycarelatinoamerica" target="_blank" rel="noopener" class="reveal group rounded-3xl border border-slate-100 bg-gradient-to-br from-[#ff0000]/10 to-surface p-7 transition hover:-translate-y-1 hover:shadow-card">
+          <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#ff0000] shadow-soft">
+            <span class="material-symbols-outlined text-[28px]">smart_display</span>
+          </span>
+          <h3 class="mt-5 font-display text-xl font-bold text-ink">YouTube</h3>
+          <p class="mt-2 text-slate-600">Testimonials, talks, and educational video content.</p>
+          <span class="mt-6 inline-flex items-center gap-2 font-semibold text-primary group-hover:gap-3">
+            Follow <span class="material-symbols-outlined text-[20px] transition">arrow_forward</span>
+          </span>
+        </a>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         9) FAQ — interactive accordion
+         ===================================================================== -->
+    <section id="faq" class="bg-surface2">
+      <div class="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+        <div class="reveal text-center">
+          <h2 class="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">Get your questions answered</h2>
+          <p class="mt-4 text-lg text-slate-600">
+            Clear answers about the Creighton Model, NaProTECHNOLOGY, and how to take the first step.
+          </p>
+        </div>
+
+        <div class="reveal mt-10 divide-y divide-slate-200 rounded-3xl border border-slate-100 bg-white shadow-soft">
+          <!-- FAQ item -->
+          <div class="faq-item">
+            <button class="faq-question flex w-full items-center justify-between gap-4 px-6 py-5 text-left" aria-expanded="false">
+              <span class="font-display font-semibold text-ink">Is the Creighton Model a calendar method?</span>
+              <span class="material-symbols-outlined faq-plus shrink-0 text-primary">add</span>
+            </button>
+            <div class="faq-answer px-6">
+              <div class="pb-6 text-slate-600">
+                No. Unlike calendar methods, it does not estimate fertile days from previous cycles. It teaches you to
+                observe and record, in real time, the biomarkers of your own cycle —such as bleeding patterns and cervical
+                mucus— using standardized criteria. It doesn't guess the cycle: it observes it, records it, and interprets it.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question flex w-full items-center justify-between gap-4 px-6 py-5 text-left" aria-expanded="false">
+              <span class="font-display font-semibold text-ink">Do I need to be married or in a relationship to learn the Creighton Model?</span>
+              <span class="material-symbols-outlined faq-plus shrink-0 text-primary">add</span>
+            </button>
+            <div class="faq-answer px-6">
+              <div class="pb-6 text-slate-600">
+                No. Any woman of reproductive age can learn to understand her cycle to care for her health. When there is a
+                partner, they can be integrated into the process; and when appropriate, the man's reproductive health is
+                also considered.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question flex w-full items-center justify-between gap-4 px-6 py-5 text-left" aria-expanded="false">
+              <span class="font-display font-semibold text-ink">Is the Creighton Model only useful for trying to conceive?</span>
+              <span class="material-symbols-outlined faq-plus shrink-0 text-primary">add</span>
+            </button>
+            <div class="faq-answer px-6">
+              <div class="pb-6 text-slate-600">
+                No. It helps you understand and care for your reproductive health, monitor your cycle, and make decisions
+                with more information —whether to try for or postpone a pregnancy, according to the system's criteria—.
+                It also provides useful data for symptoms such as pain, irregular bleeding, or altered cycles.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question flex w-full items-center justify-between gap-4 px-6 py-5 text-left" aria-expanded="false">
+              <span class="font-display font-semibold text-ink">What is the difference between the Creighton Model and NaProTECHNOLOGY?</span>
+              <span class="material-symbols-outlined faq-plus shrink-0 text-primary">add</span>
+            </button>
+            <div class="faq-answer px-6">
+              <div class="pb-6 text-slate-600">
+                The Creighton Model is the educational part: it teaches you to observe and chart your cycle.
+                NaProTECHNOLOGY is the medical part: using that information, a medical professional can look for the causes
+                of a condition and guide tests or treatments.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question flex w-full items-center justify-between gap-4 px-6 py-5 text-left" aria-expanded="false">
+              <span class="font-display font-semibold text-ink">Does NaProTECHNOLOGY guarantee a pregnancy?</span>
+              <span class="material-symbols-outlined faq-plus shrink-0 text-primary">add</span>
+            </button>
+            <div class="faq-answer px-6">
+              <div class="pb-6 text-slate-600">
+                No. No intervention can guarantee it. NaProTECHNOLOGY seeks to restore the health conditions that allow
+                fertility to express itself naturally when possible. Every process is unique and results can vary.
+              </div>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-question flex w-full items-center justify-between gap-4 px-6 py-5 text-left" aria-expanded="false">
+              <span class="font-display font-semibold text-ink">How do I start?</span>
+              <span class="material-symbols-outlined faq-plus shrink-0 text-primary">add</span>
+            </button>
+            <div class="faq-answer px-6">
+              <div class="pb-6 text-slate-600">
+                Find a Practitioner near you in the directory. In the first session you learn about the system and start
+                charting your cycle; then you continue with personalized follow-up sessions.
+                <a href="/directory" class="mt-3 inline-flex items-center gap-1 font-semibold text-primary">
+                  Find support <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- =====================================================================
+         10) FINAL CTA
+         ===================================================================== -->
+    <section class="relative overflow-hidden bg-gradient-to-br from-primary via-primary-dark to-midnight text-white">
+      <div class="bg-dots pointer-events-none absolute inset-0 opacity-40"></div>
+      <div class="relative mx-auto max-w-4xl px-4 py-20 text-center sm:px-6 lg:px-8">
+        <h2 class="reveal font-display text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">Your cycle has something to tell you</h2>
+        <p class="reveal mt-5 text-xl text-white/90">Learn to read it with a Practitioner near you.</p>
+        <div class="reveal mt-9">
+          <a href="/directory" class="inline-flex items-center gap-2 rounded-full bg-white px-8 py-4 text-base font-bold text-primary shadow-card transition hover:-translate-y-0.5 hover:bg-mint">
+            Take the first step <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =====================================================================
+       FOOTER — brand, navigation columns, contact form, legal
+       ===================================================================== -->
+  <footer class="bg-ink text-slate-300">
+    <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+      <div class="grid gap-12 lg:grid-cols-12">
+
+        <!-- Brand + social -->
+        <div class="lg:col-span-4">
+          <a href="#home" class="inline-flex items-center" aria-label="FertilityCare — home">
+            <img src="/fertilitycare-replica/assets/logo-light.svg" alt="FertilityCare Centers Latin America" class="h-11 w-auto" />
+          </a>
+          <p class="mt-5 max-w-sm text-sm leading-relaxed text-slate-400">
+            We teach women and couples to read the signs of their cycle with the Creighton Model, and we support their
+            reproductive health alongside a network of professionals in restorative medicine across Latin America.
+          </p>
+          <p class="mt-6 text-sm font-semibold text-white">Follow us</p>
+          <div class="mt-3 flex items-center gap-3">
+            <a href="https://www.instagram.com/fertilitycarelatinoamerica/" target="_blank" rel="noopener" aria-label="Instagram" class="grid h-10 w-10 place-items-center rounded-full bg-white/10 transition hover:bg-primary">
+              <span class="material-symbols-outlined text-[20px]">photo_camera</span>
+            </a>
+            <a href="https://www.facebook.com/FertilityCareLatinoamerica" target="_blank" rel="noopener" aria-label="Facebook" class="grid h-10 w-10 place-items-center rounded-full bg-white/10 transition hover:bg-primary">
+              <span class="material-symbols-outlined text-[20px]">thumb_up</span>
+            </a>
+            <a href="https://www.youtube.com/@fertilitycarelatinoamerica" target="_blank" rel="noopener" aria-label="YouTube" class="grid h-10 w-10 place-items-center rounded-full bg-white/10 transition hover:bg-primary">
+              <span class="material-symbols-outlined text-[20px]">smart_display</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Link columns -->
+        <nav class="lg:col-span-2" aria-label="Explore the system">
+          <h3 class="font-display text-sm font-bold uppercase tracking-wide text-white">Explore the system</h3>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href="/what-is-fertilitycare" class="transition hover:text-mint">What is FertilityCare</a></li>
+            <li><a href="/creighton-model" class="transition hover:text-mint">Creighton Model</a></li>
+            <li><a href="/naprotechnology" class="transition hover:text-mint">NaProTECHNOLOGY</a></li>
+            <li><a href="/what-is-a-practitioner" class="transition hover:text-mint">What is a Practitioner</a></li>
+            <li><a href="/faq" class="transition hover:text-mint">Frequently asked questions</a></li>
+          </ul>
+        </nav>
+
+        <nav class="lg:col-span-2" aria-label="Support">
+          <h3 class="font-display text-sm font-bold uppercase tracking-wide text-white">Support</h3>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href="/directory" class="transition hover:text-mint">Centers Directory</a></li>
+            <li><a href="/directory/napro-doctors" class="transition hover:text-mint">NaPro consultant doctors</a></li>
+            <li><a href="/testimonials" class="transition hover:text-mint">Testimonials</a></li>
+          </ul>
+        </nav>
+
+        <nav class="lg:col-span-2" aria-label="Organization">
+          <h3 class="font-display text-sm font-bold uppercase tracking-wide text-white">Organization</h3>
+          <ul class="mt-4 space-y-2.5 text-sm">
+            <li><a href="/about-us" class="transition hover:text-mint">About us</a></li>
+            <li><a href="/professional-training" class="transition hover:text-mint">Professional training</a></li>
+            <li><a href="/blog" class="transition hover:text-mint">Blog</a></li>
+            <li><a href="/resources" class="transition hover:text-mint">Resources</a></li>
+            <li><a href="/resources/scientific-articles" class="transition hover:text-mint">Scientific articles</a></li>
+            <li><a href="/login" class="transition hover:text-mint">Backoffice</a></li>
+          </ul>
+        </nav>
+
+        <!-- Contact form -->
+        <div class="lg:col-span-2">
+          <h3 class="font-display text-sm font-bold uppercase tracking-wide text-white">Write to us</h3>
+          <p class="mt-4 text-sm text-slate-400">Have questions or want to take the next step? Leave us a message and we'll get back to you soon.</p>
+          <form id="contact-form" class="mt-5 space-y-3" novalidate>
+            <div>
+              <label for="name" class="sr-only">Name</label>
+              <input id="name" name="name" type="text" required placeholder="Name"
+                     class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-400 transition focus:border-mint focus:bg-white/10" />
+            </div>
+            <div>
+              <label for="email" class="sr-only">Email</label>
+              <input id="email" name="email" type="email" required placeholder="Email"
+                     class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-400 transition focus:border-mint focus:bg-white/10" />
+            </div>
+            <div>
+              <label for="looking-for" class="sr-only">I'm looking for</label>
+              <select id="looking-for" name="looking_for" class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white transition focus:border-mint focus:bg-white/10">
+                <option value="" class="text-ink">I'm looking for</option>
+                <option class="text-ink">Select an option</option>
+                <option class="text-ink">Learn about the Creighton Model</option>
+                <option class="text-ink">Care for infertility or other symptoms</option>
+                <option class="text-ink">Contact a NaPro consultant doctor</option>
+                <option class="text-ink">Professional training</option>
+                <option class="text-ink">Institutional collaboration</option>
+                <option class="text-ink">Press</option>
+                <option class="text-ink">Other</option>
+              </select>
+            </div>
+            <div>
+              <label for="message" class="sr-only">Message</label>
+              <textarea id="message" name="message" rows="3" placeholder="Message"
+                        class="w-full rounded-xl border border-white/15 bg-white/5 px-4 py-2.5 text-sm text-white placeholder-slate-400 transition focus:border-mint focus:bg-white/10"></textarea>
+            </div>
+            <label class="flex items-start gap-2 text-xs text-slate-400">
+              <input type="checkbox" required class="mt-0.5 h-4 w-4 rounded border-white/30 bg-white/10 accent-mint" />
+              <span>I have read and accept the <a href="/privacy-notice" class="font-semibold text-mint underline">privacy notice</a>.</span>
+            </label>
+            <button type="submit" class="w-full rounded-full bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:bg-primary-dark">
+              Send message
+            </button>
+            <p id="form-status" class="hidden text-xs font-semibold text-mint" role="status"></p>
+          </form>
+        </div>
+      </div>
+
+      <!-- Legal bar -->
+      <div class="mt-14 flex flex-col items-center justify-between gap-4 border-t border-white/10 pt-8 text-sm text-slate-400 sm:flex-row">
+        <p>© 2026 FertilityCare Centers Latin America</p>
+        <ul class="flex flex-wrap items-center gap-x-6 gap-y-2">
+          <li><a href="/privacy-notice" class="transition hover:text-mint">Privacy notice</a></li>
+          <li><a href="/faq" class="transition hover:text-mint">Questions</a></li>
+          <li><a href="/contact" class="transition hover:text-mint">Write to us</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Back to top -->
+  <button id="to-top" class="fixed bottom-6 right-6 z-40 hidden h-12 w-12 place-items-center rounded-full bg-primary text-white shadow-card transition hover:bg-primary-dark" aria-label="Back to top">
+    <span class="material-symbols-outlined">arrow_upward</span>
+  </button>
+
+  <!-- =====================================================================
+       JAVASCRIPT — menu, accordion, reveals, smooth scroll, form
+       ===================================================================== -->
+  <script>
+    (function () {
+      'use strict';
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      /* ---- Sticky header shadow on scroll ---- */
+      var header = document.getElementById('site-header');
+      var toTop = document.getElementById('to-top');
+      function onScroll() {
+        var y = window.scrollY || document.documentElement.scrollTop;
+        header.classList.toggle('shadow-soft', y > 8);
+        toTop.classList.toggle('hidden', y < 500);
+        toTop.classList.toggle('grid', y >= 500);
+      }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+
+      /* ---- Mobile drawer + nested accordions ---- */
+      var toggle = document.getElementById('menu-toggle');
+      var mobileMenu = document.getElementById('mobile-menu');
+      toggle.addEventListener('click', function () {
+        var open = mobileMenu.classList.toggle('hidden') === false;
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.querySelector('.material-symbols-outlined').textContent = open ? 'close' : 'menu';
+      });
+      document.querySelectorAll('.m-nav-group > button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          btn.parentElement.classList.toggle('open');
+        });
+      });
+
+      /* ---- FAQ accordion (single-open) ---- */
+      var faqItems = document.querySelectorAll('.faq-item');
+      faqItems.forEach(function (item) {
+        var q = item.querySelector('.faq-question');
+        q.addEventListener('click', function () {
+          var isOpen = item.classList.contains('open');
+          faqItems.forEach(function (other) {
+            other.classList.remove('open');
+            other.querySelector('.faq-question').setAttribute('aria-expanded', 'false');
+          });
+          if (!isOpen) {
+            item.classList.add('open');
+            q.setAttribute('aria-expanded', 'true');
+          }
+        });
+      });
+      // Open the first FAQ by default
+      if (faqItems.length) {
+        faqItems[0].classList.add('open');
+        faqItems[0].querySelector('.faq-question').setAttribute('aria-expanded', 'true');
+      }
+
+      /* ---- Scroll reveal ---- */
+      var revealEls = document.querySelectorAll('.reveal');
+      if (reduceMotion || !('IntersectionObserver' in window)) {
+        revealEls.forEach(function (el) { el.classList.add('in'); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in');
+              io.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+        revealEls.forEach(function (el) { io.observe(el); });
+      }
+
+      /* ---- Pause background videos when off-screen (perf) ---- */
+      if (!reduceMotion) {
+        var videos = document.querySelectorAll('video');
+        if ('IntersectionObserver' in window) {
+          var vio = new IntersectionObserver(function (entries) {
+            entries.forEach(function (e) {
+              var v = e.target;
+              if (e.isIntersecting) { v.play && v.play().catch(function () {}); }
+              else { v.pause && v.pause(); }
+            });
+          }, { threshold: 0.25 });
+          videos.forEach(function (v) { vio.observe(v); });
+        }
+      } else {
+        document.querySelectorAll('video').forEach(function (v) { v.removeAttribute('autoplay'); v.pause && v.pause(); });
+      }
+
+      /* ---- Missing media fallback ------------------------------------------
+         Real assets are dropped into ./assets/ later (see README.md). Until an
+         image or video file exists, swap it for the bundled placeholder so the
+         layout still reads well. */
+      var PLACEHOLDER = '/fertilitycare-replica/assets/placeholder.svg';
+      function fallbackToPlaceholder(el) {
+        if (el.dataset.fallback === '1') return;
+        el.dataset.fallback = '1';
+        var img = document.createElement('img');
+        img.src = PLACEHOLDER;
+        img.alt = el.getAttribute('aria-label') || '';
+        img.className = el.className;
+        img.loading = 'lazy';
+        if (el.parentNode) el.parentNode.replaceChild(img, el);
+      }
+      document.querySelectorAll('img').forEach(function (img) {
+        img.addEventListener('error', function () { fallbackToPlaceholder(img); });
+        if (img.complete && img.naturalWidth === 0 && img.getAttribute('src')) {
+          fallbackToPlaceholder(img);
+        }
+      });
+      document.querySelectorAll('video').forEach(function (vid) {
+        vid.addEventListener('error', function () { fallbackToPlaceholder(vid); }, true);
+        var source = vid.querySelector('source');
+        if (source) source.addEventListener('error', function () { fallbackToPlaceholder(vid); });
+      });
+
+      /* ---- Contact form (front-end stub — wire to your endpoint) ---- */
+      var form = document.getElementById('contact-form');
+      var status = document.getElementById('form-status');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+        status.textContent = 'Thank you! We received your message and will get back to you soon.';
+        status.classList.remove('hidden');
+        form.reset();
+      });
+    })();
+  </script>
+</body>
+</html>

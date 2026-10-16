@@ -2,8 +2,8 @@
     <div class="sidebar-logo">
       <!-- Logo Header -->
       <div class="logo-header" data-background-color="dark">
-        <a href="index.html" class="logo">
-          <img src="{{ asset($appSetting->logo) }}" alt="navbar brand" class="navbar-brand" height="20" />
+        <a href="{{ url('admin/dashboard') }}" class="logo">
+          <img src="{{ setting_url('branding.logo', asset('fertilitycare-replica/assets/logo.svg')) }}" alt="navbar brand" class="navbar-brand" height="20" />
         </a>
         <div class="nav-toggle">
           <button class="btn btn-toggle toggle-sidebar">
@@ -22,110 +22,77 @@
     <div class="sidebar-wrapper scrollbar scrollbar-inner">
       <div class="sidebar-content">
         <ul class="nav nav-secondary">
-          <li class="nav-item active">
-            <a href="{{ url('admin/dashboard') }}" >
+          <li class="nav-item {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
+            <a href="{{ route('admin.dashboard') }}">
               <i class="fas fa-home"></i>
               <p>Dashboard</p>
-              
-            </a>
-            
-          </li>
-         
-          {{-- <li class="nav-item">
-            <a href="{{ url('admin/offers') }}">
-              <i class="fas fa-table"></i>
-              <p>Offers</p>
-            </a>
-            
-          </li> --}}
-          {{-- <li class="nav-item">
-            <a href="{{ url('admin/orders') }}">
-              <i class="fab fa-first-order"></i>
-              <p>Orders</p>
-            </a>
-            
-          </li> --}}
-          <li class="nav-item">
-            <a href="{{ url('admin/appointments') }}">
-              <i class="fas fa-calendar-check"></i>
-              <p>Appointments</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ url('admin/applications') }}">
-              <i class="fas fa-file-alt"></i>
-              <p>Applications</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="{{ url('admin/category') }}">
-              <i class="fas fa-list-alt"></i>
-              <p>Categories</p>
-            </a>
-            
-          </li>
-          <li class="nav-item">
-            <a href="{{ url('admin/testimonials') }}">
-              <i class="fab fa-product-hunt"></i>
-              <p>Testominials</p>
-            </a>
-            
-          </li>
-          {{-- <li class="nav-item">
-            <a href="{{ url('admin/jobs') }}">
-              <i class="fab fa-product-hunt"></i>
-              <p>Jobs</p>
-            </a>
-            
-          </li> --}}
-          <li class="nav-item">
-            <a href="{{ url('admin/products') }}">
-              <i class="fab fa-product-hunt"></i>
-              <p>Products</p>
-            </a>
-            
-          </li>
-          <li class="nav-item">
-            <a href="{{ url('admin/subscribers') }}">
-              <i class="fab fa-product-hunt"></i>
-              <p>Subscribers</p>
             </a>
           </li>
 
-          <li class="nav-item">
-            <a href="{{ url('admin/faqs') }}">
+          <li class="nav-section">
+            <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
+            <h4 class="text-section">Content</h4>
+          </li>
+
+          <li class="nav-item {{ request()->routeIs('admin.pages*') ? 'active' : '' }}">
+            <a href="{{ route('admin.pages') }}">
+              <i class="fas fa-file-alt"></i>
+              <p>Page Content</p>
+            </a>
+          </li>
+          <li class="nav-item {{ request()->routeIs('admin.testimonials*') ? 'active' : '' }}">
+            <a href="{{ route('admin.testimonials.index') }}">
+              <i class="fas fa-quote-right"></i>
+              <p>Testimonials</p>
+            </a>
+          </li>
+          <li class="nav-item {{ request()->routeIs('admin.faqs*') ? 'active' : '' }}">
+            <a href="{{ route('admin.faqs.index') }}">
               <i class="fas fa-question-circle"></i>
               <p>FAQs</p>
             </a>
           </li>
-
-          <li class="nav-item">
-            <a href="{{ url('admin/about') }}">
-              <i class="fab fa-product-hunt"></i>
-              <p>About</p>
+          <li class="nav-item {{ request()->routeIs('admin.posts*') ? 'active' : '' }}">
+            <a href="{{ route('admin.posts.index') }}">
+              <i class="fas fa-newspaper"></i>
+              <p>Blog</p>
             </a>
           </li>
-
-          <li class="nav-item">
-            <a href="{{ url('admin/board') }}">
-              <i class="fab fa-product-hunt"></i>
-              <p>Board Members</p>
+          <li class="nav-item {{ request()->routeIs('admin.centers*') ? 'active' : '' }}">
+            <a href="{{ route('admin.centers.index') }}">
+              <i class="fas fa-map-marker-alt"></i>
+              <p>Centers Directory</p>
             </a>
           </li>
-
-          <li class="nav-item">
-            <a href="{{ url('admin/sliders') }}">
-              <i class="fas fa-images"></i>
-              <p>Slider</p>
+          <li class="nav-item {{ request()->routeIs('admin.messages*') ? 'active' : '' }}">
+            <a href="{{ route('admin.messages.index') }}">
+              <i class="fas fa-envelope"></i>
+              <p>
+                Messages
+                @php $__unread = \App\Models\ContactMessage::query()->unread()->count(); @endphp
+                @if ($__unread)
+                  <span class="badge badge-danger">{{ $__unread }}</span>
+                @endif
+              </p>
             </a>
-            
           </li>
-          <li class="nav-item">
-            <a href="{{ url('admin/settings') }}">
+          <li class="nav-item {{ request()->routeIs('admin.settings*') ? 'active' : '' }}">
+            <a href="{{ route('admin.settings') }}">
               <i class="fas fa-cog"></i>
-              <p>Settings</p>
+              <p>Site Settings</p>
             </a>
-            
+          </li>
+
+          <li class="nav-section">
+            <span class="sidebar-mini-icon"><i class="fa fa-ellipsis-h"></i></span>
+            <h4 class="text-section">Account</h4>
+          </li>
+
+          <li class="nav-item {{ request()->routeIs('admin.password') ? 'active' : '' }}">
+            <a href="{{ route('admin.password') }}">
+              <i class="fas fa-key"></i>
+              <p>Change Password</p>
+            </a>
           </li>
 
           <li class="nav-item">
@@ -136,7 +103,6 @@
             <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
               @csrf
             </form>
-            
           </li>
         </ul>
       </div>

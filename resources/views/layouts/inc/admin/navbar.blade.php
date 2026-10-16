@@ -66,7 +66,7 @@
               </div>
               <span class="profile-username">
                 <span class="op-7">Hi,</span>
-                <span class="fw-bold">{{ $admin->name }}</span>
+                <span class="fw-bold">{{ $admin?->name ?? 'Administrator' }}</span>
               </span>
             </a>
             <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -77,7 +77,7 @@
                       <img src="{{ asset('assets/admin/assets/img/admin.png') }}" alt="image profile" class="avatar-img rounded" />
                     </div>
                     <div class="u-text">
-                      <h4>{{ $admin->name }}</h4>
+                      <h4>{{ $admin?->name ?? 'Administrator' }}</h4>
   
                     </div>
                   </div>

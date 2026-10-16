@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title') | {{ $appSetting->website_name }}</title>
-    <link rel="shortcut icon" type="image/png" href="{{ asset($appSetting->favicon) }}" />
+    <link rel="shortcut icon" type="image/png" href="{{ setting_url('branding.favicon', asset('fertilitycare-replica/assets/icon.png')) }}" />
     
 
     <!-- Fonts -->
@@ -72,7 +72,7 @@
                 </ul>
               </nav> --}}
               <div class="copyright">
-                © 2024 {{ $appSetting->website_name }}, All rights reserved.
+                {{ setting('identity.footer_copyright') }}
               </div>
               {{-- <div>
                 Distributed by
@@ -211,15 +211,15 @@
 
 
 <script>
-  ClassicEditor
-  .create( document.querySelector( '#description' ) )
-  .catch( error => {
-  console.error( error );
+  // Rich-text editors for the content modules (Blog body, FAQ answer).
+  // Any <textarea class="rich-editor"> on the page becomes a CKEditor instance.
+  document.querySelectorAll('textarea.rich-editor').forEach(function (el) {
+    ClassicEditor.create(el).catch(function (error) {
+      console.error(error);
+    });
   });
 </script>
 
-{{-- <script>
-  CKEDITOR.replace( 'description' );
-</script>
-</body> --}}
+@stack('scripts')
+</body>
 </html>

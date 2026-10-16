@@ -16,9 +16,11 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!Auth::user()->role_as == '1'){
-            return redirect('/home')->with('error', 'Access denied! You are not allowed to access this page.');
+        // Only signed-in users with the administrator role may pass.
+        if (! Auth::check() || (int) Auth::user()->role_as !== 1) {
+            return redirect('/')->with('error', 'Access denied! You are not allowed to access this page.');
         }
+
         return $next($request);
     }
 }

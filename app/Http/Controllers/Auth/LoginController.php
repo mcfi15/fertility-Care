@@ -27,27 +27,14 @@ class LoginController extends Controller
      *
      * @var string
      */
-    //protected $redirectTo = '/home';
-
     protected function authenticated(Request $request, $user)
     {
-        if(Auth::user()->role_as == '1'){
-            return redirect('admin/dashboard')->with('message', 'Welcome to Admin Dashbaord');
+        if ((int) $user->role_as === 1) {
+            return redirect('admin/dashboard')->with('message', 'Welcome to the Admin Dashboard');
         }
-        else{
-            return redirect('/home')->with('status', 'Logged in successfully'); 
-        }
-    }
 
-    // protected function authenticated(Request $request, $user)
-    // {
-    //     if(Auth::user()->role_as == '1'){
-    //         return redirect('admin/dashboard')->with('message', 'Welcome to Admin Dashbaord');
-    //     }
-    //     else{
-    //         return redirect('/home')->with('status', 'Logged in successfully'); 
-    //     }
-    // }
+        return redirect('/')->with('status', 'Logged in successfully');
+    }
 
     /**
      * Create a new controller instance.

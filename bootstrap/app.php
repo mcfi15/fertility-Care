@@ -43,6 +43,24 @@ $app->singleton(
 
 /*
 |--------------------------------------------------------------------------
+| Use A Sub-directory Aware Router
+|--------------------------------------------------------------------------
+|
+| The HTTP kernel captures the router in its constructor, so this must be
+| bound before "public/index.php" resolves the kernel below. The router
+| classes keep the home page working when the app is served from a
+| sub-directory while routes are cached (php artisan optimize) — see
+| App\Routing\SubdirectoryCompiledRouteCollection.
+|
+*/
+
+$app->singleton(
+    'router',
+    fn ($app) => new App\Routing\Router($app['events'], $app)
+);
+
+/*
+|--------------------------------------------------------------------------
 | Return The Application
 |--------------------------------------------------------------------------
 |

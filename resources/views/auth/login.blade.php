@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin Login | {{ $appSetting->website_name ?? 'FertilityCare' }}</title>
-    <link rel="shortcut icon" href="{{ asset($appSetting->favicon ?? 'assets/front/img/favicon.png') }}" type="image/png">
+    <link rel="shortcut icon" href="{{ setting_url('branding.favicon', asset('fertilitycare-replica/assets/icon.png')) }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -379,7 +379,7 @@
         <div class="login-left">
             <div class="left-content">
                 <div class="brand">
-                    <img src="{{ asset($appSetting->logo ?? 'assets/front/img/logo.png') }}" alt="{{ $appSetting->website_name }}">
+                    <img src="{{ setting_url('branding.logo', asset('fertilitycare-replica/assets/logo.svg')) }}" alt="{{ $appSetting->website_name }}">
                 </div>
                 <h1>Welcome Back</h1>
                 <p>Sign in to manage your fertility care platform, appointments, patients, and website content.</p>
