@@ -89,7 +89,6 @@
           <li><a href="/blog" class="transition hover:text-mint">Blog</a></li>
           <li><a href="/resources" class="transition hover:text-mint">Resources</a></li>
           <li><a href="/resources/scientific-articles" class="transition hover:text-mint">Scientific articles</a></li>
-          <li><a href="/login" class="transition hover:text-mint">Backoffice</a></li>
         </ul>
       </nav>
 

@@ -127,7 +127,7 @@
       </a>
 
       <!-- Card 5 — Continuing Education -->
-      <a href="/login" class="reveal group flex flex-col rounded-3xl border border-slate-100 bg-surface2 p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/20">
+      <a href="/contact" class="reveal group flex flex-col rounded-3xl border border-slate-100 bg-surface2 p-7 shadow-soft transition hover:-translate-y-1 hover:border-primary/20">
         <span class="grid h-14 w-14 place-items-center rounded-2xl bg-white text-primary shadow-soft transition group-hover:bg-primary group-hover:text-white">
           <span class="material-symbols-outlined text-[28px]">lock_open</span>
         </span>
