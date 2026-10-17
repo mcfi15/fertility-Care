@@ -1,14 +1,20 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Admin Login | {{ $appSetting->website_name ?? 'FertilityCare' }}</title>
-    <link rel="shortcut icon" href="{{ setting_url('branding.favicon', asset('fertilitycare-replica/assets/icon.png')) }}" type="image/png">
+    <link rel="shortcut icon"
+        href="{{ setting_url('branding.favicon', asset('fertilitycare-replica/assets/icon.png')) }}" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -40,7 +46,7 @@
             width: 600px;
             height: 600px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(33,205,192,0.15) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(33, 205, 192, 0.15) 0%, transparent 70%);
             top: -200px;
             right: -200px;
             animation: float 8s ease-in-out infinite;
@@ -52,15 +58,22 @@
             width: 400px;
             height: 400px;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(33,205,192,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(33, 205, 192, 0.1) 0%, transparent 70%);
             bottom: -100px;
             left: -100px;
             animation: float 6s ease-in-out infinite reverse;
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(30px, -30px); }
+
+            0%,
+            100% {
+                transform: translate(0, 0);
+            }
+
+            50% {
+                transform: translate(30px, -30px);
+            }
         }
 
         .left-content {
@@ -70,8 +83,15 @@
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .left-content .brand {
@@ -92,7 +112,7 @@
         }
 
         .left-content p {
-            color: rgba(255,255,255,0.7);
+            color: rgba(255, 255, 255, 0.7);
             font-size: 1.05rem;
             line-height: 1.7;
         }
@@ -107,7 +127,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: rgba(255,255,255,0.8);
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.95rem;
         }
 
@@ -115,7 +135,7 @@
             width: 32px;
             height: 32px;
             border-radius: 8px;
-            background: rgba(33,205,192,0.2);
+            background: rgba(33, 205, 192, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -196,13 +216,13 @@
 
         .input-wrapper input:focus {
             border-color: #21cdc0;
-            box-shadow: 0 0 0 4px rgba(33,205,192,0.1);
+            box-shadow: 0 0 0 4px rgba(33, 205, 192, 0.1);
             background: #fff;
         }
 
         .input-wrapper input.is-invalid {
             border-color: #ef4444;
-            box-shadow: 0 0 0 4px rgba(239,68,68,0.1);
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.1);
         }
 
         .input-wrapper .toggle-password {
@@ -271,7 +291,7 @@
 
         .btn-login:hover {
             transform: translateY(-1px);
-            box-shadow: 0 8px 24px rgba(33,205,192,0.35);
+            box-shadow: 0 8px 24px rgba(33, 205, 192, 0.35);
         }
 
         .btn-login:active {
@@ -287,7 +307,7 @@
             display: none;
             width: 18px;
             height: 18px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -298,7 +318,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .alert {
@@ -327,8 +349,15 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-8px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .error-summary {
@@ -364,22 +393,34 @@
         }
 
         @media (max-width: 900px) {
-            .login-left { display: none; }
-            .login-right { flex: 1; }
-            .login-form-wrapper { max-width: 100%; }
+            .login-left {
+                display: none;
+            }
+
+            .login-right {
+                flex: 1;
+            }
+
+            .login-form-wrapper {
+                max-width: 100%;
+            }
         }
 
         @media (max-width: 480px) {
-            .login-right { padding: 24px; }
+            .login-right {
+                padding: 24px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="login-container">
         <div class="login-left">
             <div class="left-content">
                 <div class="brand">
-                    <img src="{{ setting_url('branding.logo', asset('fertilitycare-replica/assets/logo.svg')) }}" alt="{{ $appSetting->website_name }}">
+                    <img src="{{ setting_url('branding.logo', asset('fertilitycare-replica/assets/logo.svg')) }}"
+                        alt="{{ $appSetting->website_name }}">
                 </div>
                 <h1>Welcome Back</h1>
                 <p>Sign in to manage your fertility care platform, appointments, patients, and website content.</p>
@@ -403,23 +444,23 @@
             <div class="login-form-wrapper">
                 <div class="form-header">
                     <h2>Sign In</h2>
-                    <p>Enter your credentials to access the admin panel</p>
+                    <p>Enter your credentials to access the panel</p>
                 </div>
 
                 @if ($errors->any())
-                <div class="error-summary">
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+                    <div class="error-summary">
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
                 @endif
 
                 @if (session('status'))
-                <div class="alert alert-success show">
-                    {{ session('status') }}
-                </div>
+                    <div class="alert alert-success show">
+                        {{ session('status') }}
+                    </div>
                 @endif
 
                 <form method="POST" action="{{ route('login') }}" id="loginForm">
@@ -429,7 +470,9 @@
                         <label for="email">Email Address</label>
                         <div class="input-wrapper">
                             <span class="input-icon">&#9993;</span>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus placeholder="you@example.com" class="@error('email') is-invalid @enderror">
+                            <input id="email" type="email" name="email" value="{{ old('email') }}" required
+                                autocomplete="email" autofocus placeholder="you@example.com"
+                                class="@error('email') is-invalid @enderror">
                         </div>
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -440,8 +483,11 @@
                         <label for="password">Password</label>
                         <div class="input-wrapper">
                             <span class="input-icon">&#128274;</span>
-                            <input id="password" type="password" name="password" required autocomplete="current-password" placeholder="Enter your password" class="@error('password') is-invalid @enderror">
-                            <button type="button" class="toggle-password" onclick="togglePassword()" id="toggleBtn">&#128065;</button>
+                            <input id="password" type="password" name="password" required
+                                autocomplete="current-password" placeholder="Enter your password"
+                                class="@error('password') is-invalid @enderror">
+                            <button type="button" class="toggle-password" onclick="togglePassword()"
+                                id="toggleBtn">&#128065;</button>
                         </div>
                         @error('password')
                             <div class="invalid-feedback">{{ $message }}</div>
@@ -481,11 +527,12 @@
             }
         }
 
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
+        document.getElementById('loginForm').addEventListener('submit', function (e) {
             const btn = document.getElementById('loginBtn');
             btn.classList.add('loading');
             btn.disabled = true;
         });
     </script>
 </body>
+
 </html>
